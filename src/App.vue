@@ -1,3 +1,4 @@
+
 <template>
   <div id="app">
     <GradesSystem />
@@ -5,12 +6,17 @@
 </template>
 
 <script>
+// eslint-disable-next-line
 import GradesSystem from "./components/GradesSystem.vue";
 export default {
+  // eslint-disable-next-line
   name: "App",
   components: {
+    // eslint-disable-next-line
     GradesSystem,
+    // eslint-disable-next-line
   },
+  // eslint-disable-next-line
 };
 </script>
 
