@@ -1,18 +1,15 @@
 <template>
   <div id="app">
-    <!-- <img src="./assets/logo.png" /> -->
     <GradesSystem />
   </div>
 </template>
 
 <script>
-// import HelloWorld from './components/HelloWorld'
 import GradesSystem from "./components/GradesSystem.vue";
 export default {
   name: "App",
   components: {
     GradesSystem,
-    // HelloWorld
   },
 };
 </script>
