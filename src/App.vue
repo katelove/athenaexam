@@ -6,18 +6,13 @@
 </template>
 
 <script>
-// eslint-disable-next-line
-import GradesSystem from "./components/GradesSystem.vue";
+import GradesSystem from './components/GradesSystem.vue'
 export default {
-  // eslint-disable-next-line
-  name: "App",
+  name: 'App',
   components: {
-    // eslint-disable-next-line
-    GradesSystem,
-    // eslint-disable-next-line
-  },
-  // eslint-disable-next-line
-};
+    GradesSystem
+  }
+}
 </script>
 
 <style>
