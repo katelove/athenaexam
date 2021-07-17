@@ -50,13 +50,6 @@ export default {
       dataList: []
     }
   },
-  created () {
-    // eslint-disable-next-line no-labels
-    this.name = ''
-    this.email = ''
-    this.english = ''
-    this.math = ''
-  },
   methods: {
     // 產生id
     hashGenerator (digit) {
@@ -77,6 +70,10 @@ export default {
         english: this.english,
         math: this.math
       })
+      this.name = ''
+      this.email = ''
+      this.english = ''
+      this.math = ''
     },
     dataUpdate (newData) {
       const origin = this.dataList
