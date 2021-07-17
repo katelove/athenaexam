@@ -107,6 +107,13 @@ export default {
           })
           localStorage.setItem('dataList', JSON.stringify(arrayJason))
         }
+      } else if (newData.event === 'del') {
+        const d = origin.filter(item => {
+          return (item.id = newData.id)
+        })
+        const index = origin.indexOf(d[0])
+        origin.splice(index, 1)
+        localStorage.setItem('dataList', JSON.stringify(origin))
       }
     }
   },

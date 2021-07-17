@@ -64,6 +64,12 @@ export default {
         // 除了在 template 裡面，呼叫任何 vue 裡的東西都要透過 this～
         this.onchange(this.edit)
       }
+    },
+    del () {
+      this.$emit('updated', {
+        id: this.id,
+        event: 'del'
+      })
     }
   }
 }
