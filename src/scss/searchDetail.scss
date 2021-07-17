@@ -1,4 +1,27 @@
-.detail-search-line {
-  display: flex;
-  justify-content: center;
+.searchInfo {
+  width: 800px;
+  .searchTitle {
+    display: flex;
+    justify-content: flex-start;
+    margin-left: 100px;
+  }
+
+  .detailSearch {
+    margin-left: 100px;
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    .detailName {
+      width: 80px;
+      text-align: left;
+    }
+    input[type='text'] {
+      width: 500px;
+    }
+    .gradesChoice {
+      display: flex;
+      justify-content: space-between;
+    }
+  }
 }

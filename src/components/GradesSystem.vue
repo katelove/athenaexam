@@ -10,12 +10,12 @@
     </div>
     <!-- 查詢條件 -->
     <div class="row">
-      <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+      <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 centerSty">
         <SearchDetail></SearchDetail>
       </div>
     </div>
     <div class="row">
-      <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+      <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 centerSty">
         <TableGrades></TableGrades>
       </div>
     </div>
@@ -33,3 +33,10 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.centerSty {
+  display: flex;
+  justify-content: center;
+}
+</style>
