@@ -1,13 +1,50 @@
-.bluePlus{
-  background-color: rgb(89, 204, 219);
-  width: 80px;
-  height: 30px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: 2px rgb(106, 192, 185) solid;
-  h4{
-    color: white;
-    font-size: 20px;
+#gradesSty {
+  background-color: #f0f0f0;
+  thead {
+    .gradesTitle {
+      background-color: #0066cc;
+      width: 80px;
+      height: 30px;
+      color: white;
+    }
+    input {
+      width: 80px;
+      height: 25px;
+      border-radius: 5px;
+      border: 2px #9d9d9d;
+    }
+    .bluePlus {
+      background-color: rgb(89, 204, 219);
+      width: 80px;
+      height: 30px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 5px;
+      border: 2px rgb(89, 196, 187) solid;
+      cursor: pointer;
+      h4 {
+        color: white;
+        font-size: 20px;
+      }
+    }
+  }
+
+  tbody {
+    tr:nth-child(even) {
+      background: #97cbff;
+    }
+    tr:nth-child(odd) {
+      background: #ccc;
+    }
+    .tableIcon {
+      div {
+        width: 30px;
+        display: inline-block;
+        color: #5b5b5b;
+        cursor: pointer;
+        text-align: center;
+      }
+    }
   }
 }

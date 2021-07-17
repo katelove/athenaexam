@@ -1,8 +1,8 @@
 <template>
-  <table>
+  <table id="gradesSty">
     <thead>
       <tr>
-        <th v-for="(item, index) in titleList" :key="index">
+        <th class="gradesTitle" v-for="(item, index) in titleList" :key="index">
           {{ item }}
         </th>
       </tr>
@@ -19,7 +19,10 @@
     </thead>
     <tbody>
       <tr>
-        <th></th>
+        <th class="tableIcon">
+          <div><font-awesome-icon icon="edit" /></div>
+          <div><font-awesome-icon icon="trash-alt" /></div>
+        </th>
       </tr>
     </tbody>
   </table>
@@ -34,7 +37,7 @@ export default {
       titleList: [
         '動作',
         '姓名',
-        'email',
+        '電子信箱',
         '英文',
         '數學',
         '新增時間',
