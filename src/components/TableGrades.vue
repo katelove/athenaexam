@@ -8,28 +8,27 @@
       </tr>
       <tr>
         <th>
-          <button class="bluePlus"><h4>+</h4></button>
+          <button class="bluePlus" @click="addData()"><h4>+</h4></button>
         </th>
-        <th v-for="(item, index) in inputList" :key="index">
-          <input type="text" />
-        </th>
+        <th><input type="text" v-model="name" /></th>
+        <th><input type="text" v-model="email" /></th>
+        <th><input type="text" v-model="english" /></th>
+        <th><input type="text" v-model="math" /></th>
         <th></th>
         <th></th>
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <th class="tableIcon">
-          <div><font-awesome-icon icon="edit" /></div>
-          <div><font-awesome-icon icon="trash-alt" /></div>
-        </th>
-      </tr>
+      <DataInfo v-for="(item, index) in dataList" :key="index" v-bind="item" />
     </tbody>
   </table>
 </template>
 
 <script>
+import DataInfo from './DataInfo.vue'
+
 export default {
+  components: { DataInfo },
   name: 'TableGrades',
   props: ['name', 'email', 'english', 'math'],
   data () {
@@ -43,19 +42,24 @@ export default {
         '新增時間',
         '修改時間'
       ],
-      inputList: [] // 資料
+      dataList: []
     }
   },
   mounted () {
-    // input欄位有4個
-    for (var i = 0; i < 4; i++) {
-      this.inputList.push({
-        name: '',
-        email: '',
-        english: '',
-        math: ''
+    console.log('name:' + this.name)
+  },
+  methods: {
+    addData () {
+      this.dataList.push({
+        name: this.name,
+        email: this.email,
+        english: this.english,
+        math: this.math
       })
     }
+  },
+  component: {
+    DataInfo
   }
 }
 </script>
