@@ -50,8 +50,12 @@ export default {
       dataList: []
     }
   },
-  mounted () {
-    // console.log('要做清除 dataList:' + this.name)
+  created () {
+    // eslint-disable-next-line no-labels
+    this.name = ''
+    this.email = ''
+    this.english = ''
+    this.math = ''
   },
   methods: {
     // 產生id
@@ -76,11 +80,9 @@ export default {
     },
     dataUpdate (newData) {
       const origin = this.dataList
-
       if (newData.event === 'update') {
         origin.forEach((item, index) => {
           if (item.id === newData.id) {
-            console.log('進入dataUpdate update')
             // eslint-disable-next-line no-unused-expressions
             item.name = newData.name
             // eslint-disable-next-line no-unused-expressions

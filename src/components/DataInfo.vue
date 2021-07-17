@@ -28,7 +28,7 @@
 <script>
 export default {
   name: 'DataInfo',
-  props: ['name', 'email', 'english', 'math'],
+  props: ['id', 'name', 'email', 'english', 'math'],
   data () {
     return {
       edit: false
@@ -38,12 +38,14 @@ export default {
     data: 'onchange'
   },
   methods: {
-    onchange () {
+    onchange (edit) {
       this.$emit('updated', {
+        id: this.id,
         name: this.name,
         email: this.email,
         english: this.english,
         math: this.math,
+        edit: this.edit,
         event: 'update'
       })
     },
@@ -58,7 +60,8 @@ export default {
         // eslint-disable-next-line no-unused-expressions
         this.edit = true
       } else {
-        onchange()
+        // 除了在 template 裡面，呼叫任何 vue 裡的東西都要透過 this～
+        this.onchange(this.edit)
       }
     }
   }
