@@ -19,7 +19,12 @@
       </tr>
     </thead>
     <tbody>
-      <DataInfo v-for="(item, index) in dataList" :key="index" v-bind="item" />
+      <DataInfo
+        v-for="(item, index) in dataList"
+        :key="index"
+        v-bind="item"
+        @updated="dataUpdate($event)"
+      />
     </tbody>
   </table>
 </template>
@@ -46,16 +51,47 @@ export default {
     }
   },
   mounted () {
-    console.log('name:' + this.name)
+    // console.log('要做清除 dataList:' + this.name)
   },
   methods: {
+    // 產生id
+    hashGenerator (digit) {
+      const pattern =
+        'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+      let output = ''
+      for (let i = 0; i < digit; i++) {
+        output += pattern.charAt(Math.random() * pattern.length)
+      }
+      return output
+    },
+    // 新增
     addData () {
       this.dataList.push({
+        id: this.hashGenerator(16),
         name: this.name,
         email: this.email,
         english: this.english,
         math: this.math
       })
+    },
+    dataUpdate (newData) {
+      const origin = this.dataList
+
+      if (newData.event === 'update') {
+        origin.forEach((item, index) => {
+          if (item.id === newData.id) {
+            console.log('進入dataUpdate update')
+            // eslint-disable-next-line no-unused-expressions
+            item.name = newData.name
+            // eslint-disable-next-line no-unused-expressions
+            item.email = newData.email
+            // eslint-disable-next-line no-unused-expressions
+            item.english = newData.english
+            // eslint-disable-next-line no-unused-expressions
+            item.math = newData.math
+          }
+        })
+      }
     }
   },
   component: {
