@@ -39,6 +39,7 @@ export default {
   },
   methods: {
     onchange (edit) {
+      // 子元件傳回父元件
       this.$emit('updated', {
         id: this.id,
         name: this.name,

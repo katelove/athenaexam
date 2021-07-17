@@ -70,6 +70,7 @@ export default {
         english: this.english,
         math: this.math
       })
+      localStorage.setItem('dataList', JSON.stringify(this.dataList))
       this.name = ''
       this.email = ''
       this.english = ''
@@ -77,6 +78,8 @@ export default {
     },
     dataUpdate (newData) {
       const origin = this.dataList
+
+      // 把資料寫回原始陣列
       if (newData.event === 'update') {
         origin.forEach((item, index) => {
           if (item.id === newData.id) {
@@ -90,6 +93,20 @@ export default {
             item.math = newData.math
           }
         })
+        // 把更新後原始陣列儲存起來
+        // using localStorage here to save data
+        let arrayJason = JSON.parse(localStorage.getItem('dataList'))
+        if (arrayJason.length !== 0) {
+          arrayJason.forEach(function (item) {
+            if (item.id === newData.id) {
+              item.name = newData.name
+              item.email = newData.email
+              item.english = newData.english
+              item.math = newData.math
+            }
+          })
+          localStorage.setItem('dataList', JSON.stringify(arrayJason))
+        }
       }
     }
   },
