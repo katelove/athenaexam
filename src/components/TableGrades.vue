@@ -52,19 +52,45 @@
               >信箱不能為空</span
             >
             <span v-if="!$v.email.isEmail" class="valiateWord"
-              >請輸入正確多筆信箱(需包含@、正確mail address)
+              >請輸入正確信箱(需包含@、正確mail address)
             </span>
           </div>
         </th>
         <th>
           <input
-            type="text"
+            type="number"
             v-model.number="english"
             placeholder="請輸入分數"
+            :class="{
+              'is-invalid': $v.grades.$error
+            }"
           />
+          <div class="invalid-feedback">
+            <span v-if="submitted && !$v.grades.required" class="valiateWord"
+              >分數不能為空</span
+            >
+            <span v-if="!$v.grades.isGrades" class="valiateWord"
+              >請輸入正確成績(分數範圍 0~100)
+            </span>
+          </div>
         </th>
         <th>
-          <input type="text" v-model.number="math" placeholder="請輸入分數" />
+          <input
+            type="number"
+            v-model.number="math"
+            placeholder="請輸入分數"
+            :class="{
+              'is-invalid': $v.grades.$error
+            }"
+          />
+          <div class="invalid-feedback">
+            <span v-if="submitted && !$v.grades.required" class="valiateWord"
+              >分數不能為空</span
+            >
+            <span v-if="!$v.grades.isGrades" class="valiateWord"
+              >請輸入正確成績(分數範圍 0~100)
+            </span>
+          </div>
         </th>
         <th></th>
         <th></th>
@@ -115,24 +141,17 @@ const isEmail = function (value) {
       console.log('this.mailNum:' + mailNum)
       break
     }
-    // 每個函數都會有一個回傳值。如果你幫某個函數回傳了值，
-    // 那就是告訴他你已經獲得到你要的資料了，可以結束執行了。
-    // 那麼如果 arr 中第一個通過測試，就會直接結束 function。
   }
-
   return mailNum
 }
 
-// eslint-disable-next-line
-const isEmail_v2 = function(value) {
+// 分數
+const isGrades = function (value) {
   if (value === undefined) {
     return true
   }
-  const regexp = /^(([a-zA-Z\-0-9\\.]+@)([a-zA-Z\-0-9\\.]+)[,]*)+/g
-
-  var mailNum = value.match(regexp) === value
-
-  return mailNum
+  const reg = /^(\d|[1-9]\d|^100)$/
+  return reg.test(value)
 }
 
 export default {
@@ -165,6 +184,10 @@ export default {
     email: {
       required,
       isEmail
+    },
+    grades: {
+      required,
+      isGrades
     }
   },
   methods: {
@@ -203,7 +226,11 @@ export default {
       this.$v.$touch()
       if (this.$v.$invalid) {
         // eslint-disable-next-line no-useless-return
-        if (this.$v.name.required === true && this.$v.email.required === true) {
+        if (
+          this.$v.name.required === true &&
+          this.$v.email.required === true &&
+          this.$v.grades.required === true
+        ) {
           this.spaceRequired = true
         }
         return this.spaceRequired
