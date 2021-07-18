@@ -273,7 +273,7 @@ export default {
         this.dataVarify.email.msg = 'empty'
         return false
       } else {
-        const regexp = /^(([a-zA-Z\-0-9\\.]+@)([a-zA-Z\-0-9\\.]+\.)([a-z]{3})[,]*)+/g
+        const regexp = /^(([a-zA-Z\-0-9\\.]+@)([a-zA-Z\-0-9\\.]+\.)([a-z]+)[,]*)+/g
         let arr = []
         var mailNum = true
         if (String(this.email).indexOf(',') !== -1) {
@@ -365,35 +365,45 @@ export default {
           }
         }
 
-        // 英文分數
-        if (searchData.searchEnglish !== false) {
-          const itemEnglish = item.english
-          const inputEnglish = searchData.searchEnglish
-          if (inputEnglish === '不及格' && itemEnglish < 60) {
-            filted = true
-          } else if (inputEnglish === '及格' && itemEnglish === 60) {
-            filted = true
-          } else if (inputEnglish === '大於及格' && itemEnglish > 60) {
-            filted = true
-          } else {
-            filted = false
+        try {
+          if (!searchData.searchEnglish) {
+            searchData.searchEnglish = ''
           }
-        }
+          // 英文分數
+          if (searchData.searchEnglish !== '') {
+            const itemEnglish = item.english
+            const inputEnglish = searchData.searchEnglish
+            if (inputEnglish === '不及格' && itemEnglish < 60) {
+              filted = true
+            } else if (inputEnglish === '等於及格' && itemEnglish === 60) {
+              filted = true
+            } else if (inputEnglish === '大於及格' && itemEnglish > 60) {
+              filted = true
+            } else {
+              filted = false
+            }
+          }
+        } catch (e) {}
 
-        // 數學分數
-        if (searchData.searchMath !== false) {
-          const itemMath = item.math
-          const inputMath = searchData.searchMath
-          if (inputMath === '不及格' && itemMath < 60) {
-            filted = true
-          } else if (inputMath === '及格' && itemMath === 60) {
-            filted = true
-          } else if (inputMath === '大於及格' && itemMath > 60) {
-            filted = true
-          } else {
-            filted = false
+        try {
+          if (!searchData.searchMath) {
+            searchData.searchMath = ''
           }
-        }
+          // 數學分數
+          if (searchData.searchMath !== '') {
+            const itemMath = item.math
+            const inputMath = searchData.searchMath
+            if (inputMath === '不及格' && itemMath < 60) {
+              filted = true
+            } else if (inputMath === '等於及格' && itemMath === 60) {
+              filted = true
+            } else if (inputMath === '大於及格' && itemMath > 60) {
+              filted = true
+            } else {
+              filted = false
+            }
+          }
+        } catch (e) {}
 
         return filted
       })

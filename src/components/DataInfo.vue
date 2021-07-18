@@ -22,7 +22,7 @@
         }"
         >{{ english }}</span
       >
-      <input type="text" v-if="edit" v-model="english" />
+      <input type="number" v-if="edit" v-model="english" />
     </td>
     <td>
       <span
@@ -34,7 +34,7 @@
         }"
         >{{ math }}</span
       >
-      <input type="text" v-if="edit" v-model="math" />
+      <input type="number" v-if="edit" v-model="math" />
     </td>
     <td></td>
     <td></td>

@@ -93,27 +93,11 @@ export default {
         searchMath: ''
       },
       selected: [],
-      // gradesOptions: ['不及格', '等於及格', '大於及格'],
-      gradesOptions: [
-        {
-          text: '不及格',
-          value: '不及格'
-        },
-        {
-          text: '等於及格',
-          value: '等於及格'
-        },
-        {
-          text: '大於及格',
-          value: '大於及格'
-        }
-      ],
+      gradesOptions: ['不及格', '等於及格', '大於及格'],
       sender: {}
     }
   },
-  methods: {
-    inputHandler () {}
-  },
+  methods: {},
   components: {
     TableGrades
   }
