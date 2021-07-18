@@ -15,8 +15,7 @@
         <th>
           <input
             type="text"
-            class="form-control"
-            v-model="name"
+            v-model.trim="name"
             placeholder="請輸入名字"
             :class="{
               'is-invalid': $v.name.$error
@@ -38,7 +37,24 @@
           </div>
         </th>
         <th>
-          <input type="email" v-model="email" placeholder="請輸入信箱" />
+          <input
+            type="email"
+            v-model="email"
+            placeholder="請輸入信箱"
+            class="mailInput"
+            multiple
+            :class="{
+              'is-invalid': $v.email.$error
+            }"
+          />
+          <div class="invalid-feedback">
+            <span v-if="submitted && !$v.email.required" class="valiateWord"
+              >信箱不能為空</span
+            >
+            <span v-if="!$v.email.isEmail" class="valiateWord"
+              >請輸入正確多筆信箱(需包含@、正確mail address)
+            </span>
+          </div>
         </th>
         <th>
           <input
@@ -75,6 +91,50 @@ const isName = function (value) {
   return reg.test(value)
 }
 
+// 驗證多筆信箱
+const isEmail = function (value) {
+  if (value === undefined) {
+    return true
+  }
+  const regexp = /^(([a-zA-Z\-0-9\\.]+@)([a-zA-Z\-0-9\\.]+)[,]*)+/g
+
+  var mailNum = true
+  // eslint-disable-next-line no-array-constructor
+  let arr = []
+
+  if (String(value).indexOf(',') !== -1) {
+    arr = String(value).split(',')
+  } else {
+    arr.push(value)
+  }
+
+  for (var i = 0; i < arr.length; i++) {
+    const reg = new RegExp(regexp)
+    if (reg.test(arr[i]) === false) {
+      mailNum = false
+      console.log('this.mailNum:' + mailNum)
+      break
+    }
+    // 每個函數都會有一個回傳值。如果你幫某個函數回傳了值，
+    // 那就是告訴他你已經獲得到你要的資料了，可以結束執行了。
+    // 那麼如果 arr 中第一個通過測試，就會直接結束 function。
+  }
+
+  return mailNum
+}
+
+// eslint-disable-next-line
+const isEmail_v2 = function(value) {
+  if (value === undefined) {
+    return true
+  }
+  const regexp = /^(([a-zA-Z\-0-9\\.]+@)([a-zA-Z\-0-9\\.]+)[,]*)+/g
+
+  var mailNum = value.match(regexp) === value
+
+  return mailNum
+}
+
 export default {
   components: { DataInfo },
   name: 'TableGrades',
@@ -91,7 +151,8 @@ export default {
         '修改時間'
       ],
       dataList: [],
-      submitted: false
+      submitted: false,
+      spaceRequired: false
     }
   },
   validations: {
@@ -100,6 +161,10 @@ export default {
       minLength: minLength(3),
       maxLength: maxLength(10),
       isName
+    },
+    email: {
+      required,
+      isEmail
     }
   },
   methods: {
@@ -116,7 +181,7 @@ export default {
     // 新增
     addData () {
       this.handleSubmit()
-      if (this.$v.name.required === true) {
+      if (this.spaceRequired === true) {
         this.dataList.push({
           id: this.hashGenerator(16),
           name: this.name,
@@ -138,7 +203,10 @@ export default {
       this.$v.$touch()
       if (this.$v.$invalid) {
         // eslint-disable-next-line no-useless-return
-        return this.$v.name.required
+        if (this.$v.name.required === true && this.$v.email.required === true) {
+          this.spaceRequired = true
+        }
+        return this.spaceRequired
       }
     },
     dataUpdate (newData) {
