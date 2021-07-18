@@ -10,10 +10,44 @@
         <th>
           <button class="bluePlus" @click="addData()"><h4>+</h4></button>
         </th>
-        <th><input type="text" v-model="name" /></th>
-        <th><input type="text" v-model="email" /></th>
-        <th><input type="text" v-model="english" /></th>
-        <th><input type="text" v-model="math" /></th>
+        <th>
+          <input
+            type="text"
+            class="form-control"
+            v-model="name"
+            placeholder="請輸入名字"
+            :class="{
+              'is-invalid': $v.name.$error
+            }"
+          />
+          <div class="invalid-feedback">
+            <!-- <span v-if="!$v.name.required" class="valiateWord"
+              >名字不能為空</span
+            > -->
+            <span v-if="!$v.name.minLength" class="valiateWord"
+              >名字至少為3位字元</span
+            >
+            <span v-if="!$v.name.maxLength" class="valiateWord"
+              >名字不能超過10位字元</span
+            >
+            <span v-if="!$v.name.isName" class="valiateWord"
+              >請輸入真實姓名，中英文不能同時有，不包含任何符號和數字</span
+            >
+          </div>
+        </th>
+        <th>
+          <input
+            type="email"
+            v-model="email"
+            placeholder="kate1234@gmail.com"
+          />
+        </th>
+        <th>
+          <input type="text" v-model.number="english" placeholder="70" />
+        </th>
+        <th>
+          <input type="text" v-model.number="math" placeholder="80" />
+        </th>
         <th></th>
         <th></th>
       </tr>
@@ -31,6 +65,13 @@
 
 <script>
 import DataInfo from './DataInfo.vue'
+import { required, minLength, maxLength } from 'vuelidate/lib/validators'
+
+// 驗證姓名
+const isName = function (value) {
+  const reg = /^([\u4E00-\u9FA5]+|[a-zA-Z]+)$/
+  return reg.test(value)
+}
 
 export default {
   components: { DataInfo },
@@ -48,6 +89,14 @@ export default {
         '修改時間'
       ],
       dataList: []
+    }
+  },
+  validations: {
+    name: {
+      required,
+      minLength: minLength(3),
+      maxLength: maxLength(10),
+      isName
     }
   },
   methods: {
@@ -124,4 +173,15 @@ export default {
 </script>
 <style lang="scss">
 @import '../scss/tableGrades.scss';
+
+.valiateWord {
+  color: red;
+  font-size: 10px;
+  display: block;
+}
+input:focus {
+  outline: 0;
+  border: 1px solid #0066cc;
+  box-shadow: 0px 0px 5px 0px #0066cc;
+}
 </style>
