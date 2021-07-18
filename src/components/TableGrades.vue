@@ -17,22 +17,18 @@
             type="text"
             v-model.trim="name"
             placeholder="請輸入名字"
-            :class="{
-              'is-invalid': $v.name.$error
-            }"
+            @input="isName()"
           />
           <div class="invalid-feedback">
-            <span v-if="submitted && !$v.name.required" class="valiateWord"
+            <span
+              v-if="dataVarify.name.error && dataVarify.name.msg == 'empty'"
+              class="valiateWord"
               >名字不能為空</span
             >
-            <span v-if="!$v.name.minLength" class="valiateWord"
-              >名字至少為3位字元</span
-            >
-            <span v-if="!$v.name.maxLength" class="valiateWord"
+            <span
+              v-if="dataVarify.name.error && dataVarify.name.msg == 'max'"
+              class="valiateWord"
               >名字不能超過10位字元</span
-            >
-            <span v-if="!$v.name.isName" class="valiateWord"
-              >請輸入真實姓名，中英文不能同時有，不包含任何符號和數字</span
             >
           </div>
         </th>
@@ -43,51 +39,61 @@
             placeholder="請輸入信箱"
             class="mailInput"
             multiple
-            :class="{
-              'is-invalid': $v.email.$error
-            }"
+            @input="isEmail()"
           />
           <div class="invalid-feedback">
-            <span v-if="submitted && !$v.email.required" class="valiateWord"
+            <span
+              v-if="dataVarify.email.error && dataVarify.email.msg == 'empty'"
+              class="valiateWord"
               >信箱不能為空</span
             >
-            <span v-if="!$v.email.isEmail" class="valiateWord"
+            <span
+              v-if="dataVarify.email.error && dataVarify.email.msg == 'invalid'"
+              class="valiateWord"
               >請輸入正確信箱(需包含@、正確mail address)
             </span>
           </div>
         </th>
         <th>
           <input
-            type="number"
-            v-model.number="english"
+            type="text"
+            v-model="english"
             placeholder="請輸入分數"
-            :class="{
-              'is-invalid': $v.grades.$error
-            }"
+            @input="isGrades('english')"
           />
           <div class="invalid-feedback">
-            <span v-if="submitted && !$v.grades.required" class="valiateWord"
+            <span
+              v-if="
+                dataVarify.english.error && dataVarify.english.msg == 'empty'
+              "
+              class="valiateWord"
               >分數不能為空</span
             >
-            <span v-if="!$v.grades.isGrades" class="valiateWord"
+            <span
+              v-if="
+                dataVarify.english.error && dataVarify.english.msg == 'number'
+              "
+              class="valiateWord"
               >請輸入正確成績(分數範圍 0~100)
             </span>
           </div>
         </th>
         <th>
           <input
-            type="number"
+            type="text"
             v-model.number="math"
             placeholder="請輸入分數"
-            :class="{
-              'is-invalid': $v.grades.$error
-            }"
+            @input="isGrades('math')"
           />
           <div class="invalid-feedback">
-            <span v-if="submitted && !$v.grades.required" class="valiateWord"
+            <span
+              v-if="dataVarify.math.error && dataVarify.math.msg == 'empty'"
+              class="valiateWord"
               >分數不能為空</span
             >
-            <span v-if="!$v.grades.isGrades" class="valiateWord"
+            <span
+              v-if="dataVarify.math.error && dataVarify.math.msg == 'number'"
+              class="valiateWord"
               >請輸入正確成績(分數範圍 0~100)
             </span>
           </div>
@@ -109,50 +115,6 @@
 
 <script>
 import DataInfo from './DataInfo.vue'
-import { required, minLength, maxLength } from 'vuelidate/lib/validators'
-
-// 驗證姓名
-const isName = function (value) {
-  const reg = /^([\u4E00-\u9FA5]+|[a-zA-Z]+)$/
-  return reg.test(value)
-}
-
-// 驗證多筆信箱
-const isEmail = function (value) {
-  if (value === undefined) {
-    return true
-  }
-  const regexp = /^(([a-zA-Z\-0-9\\.]+@)([a-zA-Z\-0-9\\.]+)[,]*)+/g
-
-  var mailNum = true
-  // eslint-disable-next-line no-array-constructor
-  let arr = []
-
-  if (String(value).indexOf(',') !== -1) {
-    arr = String(value).split(',')
-  } else {
-    arr.push(value)
-  }
-
-  for (var i = 0; i < arr.length; i++) {
-    const reg = new RegExp(regexp)
-    if (reg.test(arr[i]) === false) {
-      mailNum = false
-      console.log('this.mailNum:' + mailNum)
-      break
-    }
-  }
-  return mailNum
-}
-
-// 分數
-const isGrades = function (value) {
-  if (value === undefined) {
-    return true
-  }
-  const reg = /^(\d|[1-9]\d|^100)$/
-  return reg.test(value)
-}
 
 export default {
   components: { DataInfo },
@@ -171,23 +133,24 @@ export default {
       ],
       dataList: [],
       submitted: false,
-      spaceRequired: false
-    }
-  },
-  validations: {
-    name: {
-      required,
-      minLength: minLength(3),
-      maxLength: maxLength(10),
-      isName
-    },
-    email: {
-      required,
-      isEmail
-    },
-    grades: {
-      required,
-      isGrades
+      dataVarify: {
+        name: {
+          error: false,
+          msg: 'empty'
+        },
+        email: {
+          error: false,
+          msg: 'invalid'
+        },
+        english: {
+          error: false,
+          msg: 'number'
+        },
+        math: {
+          error: false,
+          msg: 'number'
+        }
+      }
     }
   },
   methods: {
@@ -203,8 +166,10 @@ export default {
     },
     // 新增
     addData () {
-      this.handleSubmit()
-      if (this.spaceRequired === true) {
+      // chk欄位是否為空值
+      this.chkValue()
+      // this.handleSubmit()
+      if (this.submitted === true) {
         this.dataList.push({
           id: this.hashGenerator(16),
           name: this.name,
@@ -220,20 +185,42 @@ export default {
         this.math = ''
       }
     },
-    handleSubmit (e) {
-      this.submitted = true
+    chkValue () {
+      console.log('this.name:' + this.name)
+      if (
+        this.name === undefined ||
+        this.email === undefined ||
+        this.english === undefined ||
+        this.math === undefined
+      ) {
+        if (this.name === undefined) {
+          this.dataVarify.name.error = true
+          this.dataVarify.name.msg = 'empty'
+          this.submitted = false
 
-      this.$v.$touch()
-      if (this.$v.$invalid) {
-        // eslint-disable-next-line no-useless-return
-        if (
-          this.$v.name.required === true &&
-          this.$v.email.required === true &&
-          this.$v.grades.required === true
-        ) {
-          this.spaceRequired = true
+          if (this.email === undefined) {
+            this.dataVarify.email.error = true
+            this.dataVarify.email.msg = 'empty'
+            this.submitted = false
+            if (this.english === undefined) {
+              this.dataVarify.english.error = true
+              this.dataVarify.english.msg = 'empty'
+              this.submitted = false
+              if (this.math === undefined) {
+                this.dataVarify.math.error = true
+                this.dataVarify.math.msg = 'empty'
+                this.submitted = false
+                return this.submitted
+              }
+              return this.submitted
+            }
+            return this.submitted
+          }
+          return this.submitted
         }
-        return this.spaceRequired
+      } else {
+        this.submitted = true
+        return this.submitted
       }
     },
     dataUpdate (newData) {
@@ -274,6 +261,82 @@ export default {
         const index = origin.indexOf(d[0])
         origin.splice(index, 1)
         localStorage.setItem('dataList', JSON.stringify(origin))
+      }
+    },
+    // 驗證姓名
+    isName () {
+      if (this.name === '') {
+        this.dataVarify.name.error = true
+        this.dataVarify.name.msg = 'empty'
+        return false
+      } else if (this.name.length > 10) {
+        this.dataVarify.name.error = true
+        this.dataVarify.name.msg = 'max'
+        return false
+      } else {
+        this.dataVarify.name.error = false
+        this.dataVarify.name.msg = ''
+        return true
+      }
+    },
+    // 驗證信箱
+    isEmail () {
+      if (this.email === '') {
+        this.dataVarify.email.error = true
+        this.dataVarify.email.msg = 'empty'
+        return false
+      } else {
+        const regexp = /^(([a-zA-Z\-0-9\\.]+@)([a-zA-Z\-0-9\\.]+)[,]*)+/g
+        let arr = []
+        var mailNum = true
+        if (String(this.email).indexOf(',') !== -1) {
+          arr = String(this.email).split(',')
+        } else {
+          arr.push(this.email)
+        }
+
+        for (var i = 0; i < arr.length; i++) {
+          const reg = new RegExp(regexp)
+          if (reg.test(arr[i]) === false) {
+            mailNum = false
+            this.dataVarify.name.error = true
+            this.dataVarify.name.msg = 'invalid'
+            console.log('this.mailNum:' + mailNum)
+            break
+          }
+        }
+        return true
+      }
+    },
+    // 驗證分數
+    isGrades (type) {
+      var dataVarify = null
+      var data = null
+
+      if (type === 'english') {
+        dataVarify = this.dataVarify.english
+        console.log('this.english:' + this.english)
+        data = this.english
+      } else {
+        dataVarify = this.dataVarify.math
+        data = this.math
+      }
+
+      if (data === '') {
+        dataVarify.error = true
+        dataVarify.msg = 'empty'
+        return false
+      } else {
+        const reg = /^(\d|[1-9]\d|^100)$/
+        if (reg.test(data) === false) {
+          dataVarify.error = true
+          dataVarify.msg = 'number'
+          return false
+        } else {
+          dataVarify.error = false
+          dataVarify.msg = ''
+          return true
+        }
       }
     }
   },
