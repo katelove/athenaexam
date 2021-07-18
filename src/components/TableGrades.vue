@@ -273,7 +273,7 @@ export default {
         this.dataVarify.email.msg = 'empty'
         return false
       } else {
-        const regexp = /^(([a-zA-Z\-0-9\\.]+@)([a-zA-Z\-0-9\\.]+)[,]*)+/g
+        const regexp = /^(([a-zA-Z\-0-9\\.]+@)([a-zA-Z\-0-9\\.]+\.)([a-z]{3})[,]*)+/g
         let arr = []
         var mailNum = true
         if (String(this.email).indexOf(',') !== -1) {
@@ -332,31 +332,71 @@ export default {
   computed: {
     // eslint-disable-next-line vue/no-dupe-keys
     filtedDataList () {
-      console.log('進入查詢dataList ')
-
-      var seachData = {
+      var searchData = {
         searchName: this.searchName,
         searchEmail: this.searchEmail,
         searchEnglish: this.searchEnglish,
         searchMath: this.searchMath
       }
+      console.log('filtedDataList searchData:' + searchData)
 
-      var datas = []
+      // 回傳符合各搜尋條件的資料
+      return this.dataList.filter(item => {
+        var filted = true
 
-      if (seachData.searchName !== '') {
-        console.log('seachData.searchName: ' + seachData.searchName)
-        datas = this.dataList.filter(item => {
+        if (searchData.searchName !== '') {
           const itemName = item.name.toLowerCase()
-          const inputTitle = seachData.searchName.toLowerCase()
-          return itemName.indexOf(inputTitle) !== -1
-        })
-      }
+          const inputTitle = searchData.searchName.toLowerCase()
+          if (itemName.indexOf(inputTitle) !== -1) {
+            filted = true
+          } else {
+            filted = false
+          }
+        }
 
-      if (datas.length === 0) {
-        datas = this.dataList
-      }
+        // 是否符合 email 搜尋條件
+        if (searchData.searchEmail !== '') {
+          const itemEmail = item.email.toLowerCase()
+          const inputTitle = searchData.searchEmail.toLowerCase()
+          if (itemEmail.indexOf(inputTitle) !== -1) {
+            filted = true
+          } else {
+            filted = false
+          }
+        }
 
-      return datas
+        // 英文分數
+        if (searchData.searchEnglish !== false) {
+          const itemEnglish = item.english
+          const inputEnglish = searchData.searchEnglish
+          if (inputEnglish === '不及格' && itemEnglish < 60) {
+            filted = true
+          } else if (inputEnglish === '及格' && itemEnglish === 60) {
+            filted = true
+          } else if (inputEnglish === '大於及格' && itemEnglish > 60) {
+            filted = true
+          } else {
+            filted = false
+          }
+        }
+
+        // 數學分數
+        if (searchData.searchMath !== false) {
+          const itemMath = item.math
+          const inputMath = searchData.searchMath
+          if (inputMath === '不及格' && itemMath < 60) {
+            filted = true
+          } else if (inputMath === '及格' && itemMath === 60) {
+            filted = true
+          } else if (inputMath === '大於及格' && itemMath > 60) {
+            filted = true
+          } else {
+            filted = false
+          }
+        }
+
+        return filted
+      })
     }
   },
   component: {

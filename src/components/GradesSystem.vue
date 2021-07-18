@@ -97,7 +97,7 @@ export default {
       gradesOptions: [
         {
           text: '不及格',
-          value: '及格'
+          value: '不及格'
         },
         {
           text: '等於及格',

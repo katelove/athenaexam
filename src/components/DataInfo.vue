@@ -13,11 +13,27 @@
       <input type="text" v-if="edit" v-model="email" />
     </td>
     <td>
-      <span v-if="!edit">{{ english }}</span>
+      <span
+        v-if="!edit"
+        :class="{
+          scoreFailed: english < 60,
+          scorePass: english === 60,
+          scoreGood: english > 60
+        }"
+        >{{ english }}</span
+      >
       <input type="text" v-if="edit" v-model="english" />
     </td>
     <td>
-      <span v-if="!edit">{{ math }}</span>
+      <span
+        v-if="!edit"
+        :class="{
+          scoreFailed: math < 60,
+          scorePass: math === 60,
+          scoreGood: math > 60
+        }"
+        >{{ math }}</span
+      >
       <input type="text" v-if="edit" v-model="math" />
     </td>
     <td></td>
@@ -83,5 +99,15 @@ export default {
     border-radius: 5px;
     border: 1px solid gray;
   }
+}
+
+.scoreFailed {
+  color: red;
+}
+.scorePass {
+  color: darkorange;
+}
+.scoreGood {
+  color: green;
 }
 </style>
