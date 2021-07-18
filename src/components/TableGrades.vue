@@ -104,7 +104,7 @@
     </thead>
     <tbody>
       <DataInfo
-        v-for="(item, index) in dataList"
+        v-for="(item, index) in filtedDataList"
         :key="index"
         v-bind="item"
         @updated="dataUpdate($event)"
@@ -119,9 +119,13 @@ import DataInfo from './DataInfo.vue'
 export default {
   components: { DataInfo },
   name: 'TableGrades',
-  props: ['name', 'email', 'english', 'math'],
+  props: ['searchName', 'searchEmail', 'searchEnglish', 'searchMath'],
   data () {
     return {
+      name: '',
+      email: '',
+      english: 0,
+      math: 0,
       titleList: [
         '動作',
         '姓名',
@@ -187,33 +191,16 @@ export default {
     },
     chkValue () {
       console.log('this.name:' + this.name)
-      if (
-        this.name === undefined ||
-        this.email === undefined ||
-        this.english === undefined ||
-        this.math === undefined
-      ) {
-        if (this.name === undefined) {
+      if (this.name === '' || this.email === '') {
+        if (this.name === '') {
           this.dataVarify.name.error = true
           this.dataVarify.name.msg = 'empty'
           this.submitted = false
 
-          if (this.email === undefined) {
+          if (this.email === '') {
             this.dataVarify.email.error = true
             this.dataVarify.email.msg = 'empty'
             this.submitted = false
-            if (this.english === undefined) {
-              this.dataVarify.english.error = true
-              this.dataVarify.english.msg = 'empty'
-              this.submitted = false
-              if (this.math === undefined) {
-                this.dataVarify.math.error = true
-                this.dataVarify.math.msg = 'empty'
-                this.submitted = false
-                return this.submitted
-              }
-              return this.submitted
-            }
             return this.submitted
           }
           return this.submitted
@@ -299,12 +286,14 @@ export default {
           const reg = new RegExp(regexp)
           if (reg.test(arr[i]) === false) {
             mailNum = false
-            this.dataVarify.name.error = true
-            this.dataVarify.name.msg = 'invalid'
+            this.dataVarify.email.error = true
+            this.dataVarify.email.msg = 'invalid'
             console.log('this.mailNum:' + mailNum)
-            break
+            return false
           }
         }
+        this.dataVarify.email.error = false
+        this.dataVarify.email.msg = ''
         return true
       }
     },
@@ -338,6 +327,36 @@ export default {
           return true
         }
       }
+    }
+  },
+  computed: {
+    // eslint-disable-next-line vue/no-dupe-keys
+    filtedDataList () {
+      console.log('進入查詢dataList ')
+
+      var seachData = {
+        searchName: this.searchName,
+        searchEmail: this.searchEmail,
+        searchEnglish: this.searchEnglish,
+        searchMath: this.searchMath
+      }
+
+      var datas = []
+
+      if (seachData.searchName !== '') {
+        console.log('seachData.searchName: ' + seachData.searchName)
+        datas = this.dataList.filter(item => {
+          const itemName = item.name.toLowerCase()
+          const inputTitle = seachData.searchName.toLowerCase()
+          return itemName.indexOf(inputTitle) !== -1
+        })
+      }
+
+      if (datas.length === 0) {
+        datas = this.dataList
+      }
+
+      return datas
     }
   },
   component: {
