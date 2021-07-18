@@ -46,7 +46,7 @@
             <div class="col-sm-6 col-md-6 col-lg-4 col-xl-4 detailName">
               成績查詢 :
             </div>
-            <div class="col-sm-6 col-md-6 col-lg-8 col-xl-8">
+            <div class="col-sm-6 col-md-6 col-lg-4 col-xl-4">
               <b-form-group label="英文">
                 <b-form-checkbox-group
                   id="radio-group-1"
@@ -57,6 +57,8 @@
                 >
                 </b-form-checkbox-group>
               </b-form-group>
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-4 col-xl-4">
               <b-form-group label="數學">
                 <b-form-checkbox-group
                   id="radio-group-2"
@@ -67,6 +69,16 @@
                 >
                 </b-form-checkbox-group>
               </b-form-group>
+            </div>
+          </div>
+          <!-- 多語系 -->
+          <div class="row detailSearch">
+            <div class="col-sm-6 col-md-6 col-lg-4 col-xl-4 detailName">
+              時間 :
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-8 col-xl-8">
+              <input type="radio" name="" id="" /> 台灣
+              <input type="radio" name="" id="" /> 美國
             </div>
           </div>
         </div>
