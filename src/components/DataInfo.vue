@@ -36,15 +36,15 @@
       >
       <input type="number" v-if="edit" v-model="math" />
     </td>
-    <td></td>
-    <td></td>
+    <td>{{ newDate }}</td>
+    <td>{{ updateDate }}</td>
   </tr>
 </template>
 
 <script>
 export default {
   name: 'DataInfo',
-  props: ['id', 'name', 'email', 'english', 'math'],
+  props: ['id', 'name', 'email', 'english', 'math', 'newDate', 'updateDate'],
   data () {
     return {
       edit: false
@@ -62,6 +62,7 @@ export default {
         email: this.email,
         english: this.english,
         math: this.math,
+        updateDate: this.updateDate,
         edit: this.edit,
         event: 'update'
       })

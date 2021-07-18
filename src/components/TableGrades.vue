@@ -126,6 +126,8 @@ export default {
       email: '',
       english: 0,
       math: 0,
+      newDate: '',
+      updateDate: '',
       titleList: [
         '動作',
         '姓名',
@@ -172,14 +174,16 @@ export default {
     addData () {
       // chk欄位是否為空值
       this.chkValue()
-      // this.handleSubmit()
+      // 今天日期
+      this.todayDate()
       if (this.submitted === true) {
         this.dataList.push({
           id: this.hashGenerator(16),
           name: this.name,
           email: this.email,
           english: this.english,
-          math: this.math
+          math: this.math,
+          newDate: this.newDate
         })
         // 新增物件到localstorage
         localStorage.setItem('dataList', JSON.stringify(this.dataList))
@@ -188,6 +192,14 @@ export default {
         this.english = ''
         this.math = ''
       }
+    },
+    todayDate () {
+      var today = new Date()
+      var year = today.getFullYear()
+      var month = ('0' + (today.getMonth() + 1)).slice(-2)
+      var day = ('0' + today.getDate()).slice(-2)
+      this.newDate = year + '-' + month + '-' + day
+      return this.newDate
     },
     chkValue () {
       console.log('this.name:' + this.name)
@@ -212,7 +224,7 @@ export default {
     },
     dataUpdate (newData) {
       const origin = this.dataList
-
+      this.todayDate()
       // 把資料寫回原始陣列
       if (newData.event === 'update') {
         origin.forEach((item, index) => {
@@ -225,6 +237,7 @@ export default {
             item.english = newData.english
             // eslint-disable-next-line no-unused-expressions
             item.math = newData.math
+            item.updateDate = this.newDate
           }
         })
         // 把更新後原始陣列儲存起來
