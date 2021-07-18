@@ -8,7 +8,9 @@
       </tr>
       <tr>
         <th>
-          <button class="bluePlus" @click="addData()"><h4>+</h4></button>
+          <button class="bluePlus" @click="addData()">
+            <h4>+</h4>
+          </button>
         </th>
         <th>
           <input
@@ -21,9 +23,9 @@
             }"
           />
           <div class="invalid-feedback">
-            <!-- <span v-if="!$v.name.required" class="valiateWord"
+            <span v-if="submitted && !$v.name.required" class="valiateWord"
               >名字不能為空</span
-            > -->
+            >
             <span v-if="!$v.name.minLength" class="valiateWord"
               >名字至少為3位字元</span
             >
@@ -36,17 +38,17 @@
           </div>
         </th>
         <th>
+          <input type="email" v-model="email" placeholder="請輸入信箱" />
+        </th>
+        <th>
           <input
-            type="email"
-            v-model="email"
-            placeholder="kate1234@gmail.com"
+            type="text"
+            v-model.number="english"
+            placeholder="請輸入分數"
           />
         </th>
         <th>
-          <input type="text" v-model.number="english" placeholder="70" />
-        </th>
-        <th>
-          <input type="text" v-model.number="math" placeholder="80" />
+          <input type="text" v-model.number="math" placeholder="請輸入分數" />
         </th>
         <th></th>
         <th></th>
@@ -88,7 +90,8 @@ export default {
         '新增時間',
         '修改時間'
       ],
-      dataList: []
+      dataList: [],
+      submitted: false
     }
   },
   validations: {
@@ -112,18 +115,31 @@ export default {
     },
     // 新增
     addData () {
-      this.dataList.push({
-        id: this.hashGenerator(16),
-        name: this.name,
-        email: this.email,
-        english: this.english,
-        math: this.math
-      })
-      localStorage.setItem('dataList', JSON.stringify(this.dataList))
-      this.name = ''
-      this.email = ''
-      this.english = ''
-      this.math = ''
+      this.handleSubmit()
+      if (this.$v.name.required === true) {
+        this.dataList.push({
+          id: this.hashGenerator(16),
+          name: this.name,
+          email: this.email,
+          english: this.english,
+          math: this.math
+        })
+        // 新增物件到localstorage
+        localStorage.setItem('dataList', JSON.stringify(this.dataList))
+        this.name = ''
+        this.email = ''
+        this.english = ''
+        this.math = ''
+      }
+    },
+    handleSubmit (e) {
+      this.submitted = true
+
+      this.$v.$touch()
+      if (this.$v.$invalid) {
+        // eslint-disable-next-line no-useless-return
+        return this.$v.name.required
+      }
     },
     dataUpdate (newData) {
       const origin = this.dataList
@@ -173,15 +189,4 @@ export default {
 </script>
 <style lang="scss">
 @import '../scss/tableGrades.scss';
-
-.valiateWord {
-  color: red;
-  font-size: 10px;
-  display: block;
-}
-input:focus {
-  outline: 0;
-  border: 1px solid #0066cc;
-  box-shadow: 0px 0px 5px 0px #0066cc;
-}
 </style>
